@@ -28,8 +28,7 @@ object Core {
     {
       // Test that p actually returns a value.
       // Warning: If p steals the dummy proof, it breaks the system.
-      println("Testing")
-      p(dummyA())
+      require(p(dummyA()) != null)
     }
   }
   sealed case class pFalse[A <: Proposition](a : Proof[FALSE]) extends Proof[A]

@@ -15,12 +15,13 @@ object Hello {
   def pAmIHome(pGrass: Proof[GrassIsGreen], pGirls: Proof[GirlsArePretty], pParadise: Proof[IsParadiseCity]): Proof[IAmHome]
   = eImp(pParadise)(iAnd(pGrass)(pGirls))
 
-  // Infinite recursion and exceptions can "prove" anything.
+  // Infinite recursion, exceptions and null can "prove" anything.
   // Therefore existence of a proof expression isn't evidence of a proof.
   // The evaluation of the expression must also terminate successfully.
   trait Anything extends Proposition
   def pAnything1 : Proof[Anything] = pAnything1
   def pAnything2 : Proof[Anything] = throw new Exception()
+  def pAnything3 : Proof[Anything] = null
 
   def testPNot() = {
     // This shows why the pNot class must have a test and how the code could steal the dummy proof.
