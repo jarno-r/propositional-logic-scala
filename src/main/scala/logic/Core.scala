@@ -19,7 +19,7 @@ object Core {
   sealed trait Proof[P <: Proposition] { }
 
   // Axioms. These act as evidence for a proposition, without being proven themselves.
-  sealed case object pTrue extends Proof[TRUE]
+  case object pTrue extends Proof[TRUE]
   sealed case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
 
   // These two I would like to write as p[C]: Proof[A] => Proof[C], where C is a generic (universal) type. But I don't think that's possible in Scala.
