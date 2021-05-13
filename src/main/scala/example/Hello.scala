@@ -6,12 +6,19 @@ object Hello {
   import logic.Derived._
 
   trait GrassIsGreen extends Proposition
+  trait GirlsArePretty extends Proposition
+  trait IAmHome extends Proposition
+  type IsParadiseCity = IMP[AND[GrassIsGreen, GirlsArePretty], IAmHome]
 
-  //case object pGrassIsGreen extends Proof[GrassIsGreen]
+  def pAmIHome(pGrass: Proof[GrassIsGreen], pGirls: Proof[GirlsArePretty], pParadise: Proof[IsParadiseCity]): Proof[IAmHome]
+  = eImp(pParadise)(iAnd(pGrass)(pGirls))
 
-  type Propostion1 = IMP[GrassIsGreen, GrassIsGreen]
+  def main(args: Array[String]) {
+    val pGirlsArePretty: Proof[GirlsArePretty] = pAxiomatic()
+    val pGrassIsGreen: Proof[GrassIsGreen] = pAxiomatic()
+    val pParadise: Proof[IsParadiseCity] = pAxiomatic()
 
-  def main(args:Array[String]) {
-    print("Hello")
+    val pIAmHome = pAmIHome(pGrassIsGreen, pGirlsArePretty, pParadise)
+    print(pIAmHome)
   }
 }

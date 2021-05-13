@@ -31,6 +31,9 @@ object Derived {
 
   // The derived connectives will use the above rules to prove their rules of deduction.
 
+  // Proof by contradiction
+  def pContra[A <: Proposition](p:Proof[NOT[A]] => Proof[FALSE]) : Proof[A] = eNotNot(iNot(q => p(q)))
+
   // Implication.
   def iImp[A <: Proposition, B <: Proposition](fImp: Proof[A] => Proof[B]): Proof[IMP[A, B]] =
     iNot(p1 => {
@@ -40,12 +43,18 @@ object Derived {
       eNot(pB)(pNotB) : Proof[FALSE]
     })
 
-  def eImp[A <: Proposition, B <: Proposition](pImp: Proof[IMP[A, B]])(pA: Proof[A]): Proof[B] = ???
+  def eImp[A <: Proposition, B <: Proposition](pImp: Proof[IMP[A, B]])(pA: Proof[A]): Proof[B] =
+    pContra((p:Proof[NOT[B]]) => eNot(iAnd(pA)(p))(pImp))
 
-  def iOr1[A <: Proposition, B <: Proposition](pA: Proof[A]): Proof[OR[A, B]] = ???
-  def iOr2[A <: Proposition, B <: Proposition](pb:Proof[B]): Proof[OR[A, B]] = ???
+  def iOr1[A <: Proposition, B <: Proposition](pA: Proof[A]): Proof[OR[A, B]] =
+    iNot((p => eNot(pA)(eAnd1(p))))
+
+  def iOr2[A <: Proposition, B <: Proposition](pB: Proof[B]): Proof[OR[A, B]] =
+    iNot((p => eNot(pB)(eAnd2(p))))
+
   def eOr[A <: Proposition, B <: Proposition, C <: Proposition]
-  (fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C])(pOr: Proof[OR[A, B]]): Proof[C] = ???
+  (fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C])(pOr: Proof[OR[A, B]]): Proof[C] =
+    pContra((p:Proof[NOT[C]]) => ???)
 
   def pTrue : Proof[TRUE] = iImp(p => p)
 }
