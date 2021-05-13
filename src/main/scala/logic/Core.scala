@@ -14,18 +14,21 @@ object Core {
   sealed trait NOT[A <: Proposition] extends Proposition {}
 
 
-  // Sealed trait of proofs. By being sealed, it prevents false proofs from being introduced.
+  // Sealed trait of proofs. By being sealed, it prevents false axiomatic proofs from being introduced.
   sealed trait Proof[P <: Proposition] { }
 
   // Axioms. These act as evidence for a proposition, without being proven themselves.
   sealed case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
 
-  // These two I would like to write as p[C]: Proof[A] => Proof[C], where C is a generic (universal) type. But I don't think that's possible in Scala.
+  // This I would like to write as p[C]: Proof[A] => Proof[C], where C is a generic (universal) type. But I don't think that's possible in Scala.
   sealed case class pNot[A <: Proposition](p: Proof[A] => Proof[FALSE]) extends Proof[NOT[A]] {
-    private sealed case class dummyA() extends Proof[A]
+    private sealed case class dummyA() extends Proof[A] {
+      override def toString() = "You stole my dummy!"
+    }
     {
       // Test that p actually returns a value.
       // Warning: If p steals the dummy proof, it breaks the system.
+      println("Testing")
       p(dummyA())
     }
   }
@@ -33,5 +36,4 @@ object Core {
 
   // This one is special. It is equivalent to the law of excluded middle.
   sealed case class pNotNot[A <: Proposition](a: Proof[NOT[NOT[A]]]) extends Proof[A]
-
 }

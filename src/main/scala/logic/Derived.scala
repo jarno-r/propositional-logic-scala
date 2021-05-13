@@ -36,7 +36,7 @@ object Derived {
 
   // Implication.
   def iImp[A <: Proposition, B <: Proposition](fImp: Proof[A] => Proof[B]): Proof[IMP[A, B]] =
-    iNot(p1 => {
+    iNot((p1:Proof[AND[A, NOT[B]]]) => {
       val pA: Proof[A] = eAnd1(p1)
       val pNotB: Proof[NOT[B]] = eAnd2(p1)
       val pB: Proof[B] = fImp(pA)

@@ -1,5 +1,7 @@
 package example
 
+import scala.util.control.NonFatal
+
 object Hello {
 
   import logic.Core._
@@ -20,10 +22,21 @@ object Hello {
   def pAnything1 : Proof[Anything] = pAnything1
   def pAnything2 : Proof[Anything] = throw new Exception()
 
+  def testPNot() = {
+    // This shows why the pNot class must have a test and how the code could steal the dummy proof.
+    try {
+      val p: Proof[NOT[Anything]] = iNot(p => throw new Exception("Dummy:" + p))
+    }catch {
+      case NonFatal(e) => println(e)
+    }
+  }
+
   def main(args: Array[String]) {
     //val pIAmHome = pAmIHome(pGrassIsGreen, pGirlsArePretty, pParadise)
     //print(pIAmHome)
 
-
+    println("Hello")
+    testPNot()
+    println("Done")
   }
 }
