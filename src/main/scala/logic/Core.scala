@@ -19,10 +19,10 @@ object Core {
 
   // Axioms. These act as evidence for a proposition, without being proven themselves.
   case object pTrue extends Proof[TRUE]
-  case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
-  case class pNot[A <: Proposition](p: Proof[A] => Proof[FALSE]) extends Proof[NOT[A]]
-  case class pFalse[A <: Proposition](a : Proof[FALSE]) extends Proof[A]
+  sealed case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
+  sealed case class pNot[A <: Proposition](p: Proof[A] => Proof[FALSE]) extends Proof[NOT[A]]
+  sealed case class pFalse[A <: Proposition](a : Proof[FALSE]) extends Proof[A]
 
   // This one is special. It is equivalent to the law of excluded middle.
-  case class pNotNot[A <: Proposition](a: Proof[NOT[NOT[A]]]) extends Proof[A]
+  sealed case class pNotNot[A <: Proposition](a: Proof[NOT[NOT[A]]]) extends Proof[A]
 }

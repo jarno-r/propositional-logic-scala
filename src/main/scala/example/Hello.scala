@@ -3,6 +3,7 @@ package example
 object Hello {
 
   import logic.Core._
+  import logic.Derived._
 
   trait GrassIsGreen extends Proposition
 
