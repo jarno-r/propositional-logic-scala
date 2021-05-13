@@ -25,7 +25,7 @@ object Core {
     private sealed case class dummyA() extends Proof[A]
     {
       // Test that p actually returns a value.
-      // Warning: If p captures the dummy proof, it breaks the system.
+      // Warning: If p steals the dummy proof, it breaks the system.
       p(dummyA())
     }
   }
@@ -34,7 +34,4 @@ object Core {
   // This one is special. It is equivalent to the law of excluded middle.
   sealed case class pNotNot[A <: Proposition](a: Proof[NOT[NOT[A]]]) extends Proof[A]
 
-
-  // User defined axiomatic proofs.
-  sealed case class pAxiomatic[A <: Proposition]() extends Proof[A]
 }

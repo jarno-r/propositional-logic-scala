@@ -13,12 +13,17 @@ object Hello {
   def pAmIHome(pGrass: Proof[GrassIsGreen], pGirls: Proof[GirlsArePretty], pParadise: Proof[IsParadiseCity]): Proof[IAmHome]
   = eImp(pParadise)(iAnd(pGrass)(pGirls))
 
-  def main(args: Array[String]) {
-    val pGirlsArePretty: Proof[GirlsArePretty] = pAxiomatic()
-    val pGrassIsGreen: Proof[GrassIsGreen] = pAxiomatic()
-    val pParadise: Proof[IsParadiseCity] = pAxiomatic()
+  // Infinite recursion and exceptions can "prove" anything.
+  // Therefore existence of a proof expression isn't evidence of a proof.
+  // The evaluation of the expression must also terminate successfully.
+  trait Anything extends Proposition
+  def pAnything1 : Proof[Anything] = pAnything1
+  def pAnything2 : Proof[Anything] = throw new Exception()
 
-    val pIAmHome = pAmIHome(pGrassIsGreen, pGirlsArePretty, pParadise)
-    print(pIAmHome)
+  def main(args: Array[String]) {
+    //val pIAmHome = pAmIHome(pGrassIsGreen, pGirlsArePretty, pParadise)
+    //print(pIAmHome)
+
+
   }
 }
