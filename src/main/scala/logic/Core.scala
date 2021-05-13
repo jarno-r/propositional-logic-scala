@@ -6,9 +6,8 @@ object Core {
   // Supertype of all propositions.
   trait Proposition {}
 
-  // True and false proposition
+  // False proposition
   sealed trait FALSE extends Proposition {}
-  sealed trait TRUE extends Proposition {}
 
   // A complete set of logical connectives: conjunction and negation.
   sealed trait AND[A <: Proposition, B <: Proposition] extends Proposition {}
@@ -19,7 +18,6 @@ object Core {
   sealed trait Proof[P <: Proposition] { }
 
   // Axioms. These act as evidence for a proposition, without being proven themselves.
-  case object pTrue extends Proof[TRUE]
   sealed case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
 
   // These two I would like to write as p[C]: Proof[A] => Proof[C], where C is a generic (universal) type. But I don't think that's possible in Scala.

@@ -11,6 +11,9 @@ object Derived {
   // Disjunction by De Morgan's.
   type OR[A <: Proposition, B <: Proposition] = NOT[AND[NOT[A], NOT[B]]]
 
+  // True proposition
+  type TRUE = IMP[FALSE, FALSE]
+
   // System of Natural Deduction. Rules for manipulating proofs.
   // The actual bodies of these functions are not really relevant, only that there is one.
 
@@ -43,4 +46,6 @@ object Derived {
   def iOr2[A <: Proposition, B <: Proposition](pb:Proof[B]): Proof[OR[A, B]] = ???
   def eOr[A <: Proposition, B <: Proposition, C <: Proposition]
   (fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C])(pOr: Proof[OR[A, B]]): Proof[C] = ???
+
+  def pTrue : Proof[TRUE] = iImp(p => p)
 }
