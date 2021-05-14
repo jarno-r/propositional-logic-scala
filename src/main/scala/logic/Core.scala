@@ -18,10 +18,11 @@ object Core {
   sealed trait Proof[P <: Proposition] { }
 
   // Axioms. These act as evidence for a proposition, without being proven themselves.
-  sealed case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
 
-  // This I would like to write as p[C]: Proof[A] => Proof[C], where C is a generic (universal) type. But I don't think that's possible in Scala.
-  sealed case class pNot[A <: Proposition](p: Proof[A] => Proof[FALSE]) extends Proof[NOT[A]] {
+  final case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
+
+  // This would be better using polymorphic function types from Scala 3 as pNot[A](p: [C] => Proof[A] => Proof[C])
+  final case class pNot[A <: Proposition](p: Proof[A] => Proof[FALSE]) extends Proof[NOT[A]] {
     private sealed case class dummyA() extends Proof[A] {
       override def toString() = "You stole my dummy!"
     }
@@ -31,8 +32,8 @@ object Core {
       require(p(dummyA()) != null)
     }
   }
-  sealed case class pFalse[A <: Proposition](a : Proof[FALSE]) extends Proof[A]
+  final case class pFalse[A <: Proposition](a : Proof[FALSE]) extends Proof[A]
 
   // This one is special. It is equivalent to the law of excluded middle.
-  sealed case class pNotNot[A <: Proposition](a: Proof[NOT[NOT[A]]]) extends Proof[A]
+  final case class pNotNot[A <: Proposition](a: Proof[NOT[NOT[A]]]) extends Proof[A]
 }
