@@ -7,14 +7,6 @@ object Hello {
   import logic.Core._
   import logic.Derived._
 
-  trait GrassIsGreen extends Proposition
-  trait GirlsArePretty extends Proposition
-  trait IAmHome extends Proposition
-  type IsParadiseCity = IMP[AND[GrassIsGreen, GirlsArePretty], IAmHome]
-
-  def pAmIHome(pGrass: Proof[GrassIsGreen], pGirls: Proof[GirlsArePretty], pParadise: Proof[IsParadiseCity]): Proof[IAmHome]
-  = eImp(pParadise)(iAnd(pGrass)(pGirls))
-
   // Infinite recursion, exceptions and null can "prove" anything.
   // Therefore existence of a proof expression isn't evidence of a proof.
   // The evaluation of the expression must also terminate successfully.
@@ -23,7 +15,7 @@ object Hello {
   def pAnything2 : Proof[Anything] = throw new Exception()
   def pAnything3 : Proof[Anything] = null
 
-  def testPNot() = {
+  {
     // This shows why the pNot class must have a test and how the code could steal the dummy proof.
     try {
       val p: Proof[NOT[Anything]] = iNot(p => throw new Exception("Dummy:" + p))
@@ -32,12 +24,15 @@ object Hello {
     }
   }
 
-  def main(args: Array[String]) {
-    //val pIAmHome = pAmIHome(pGrassIsGreen, pGirlsArePretty, pParadise)
-    //print(pIAmHome)
+  trait Apples extends Proposition
+  trait Bananas extends Proposition
+  trait Cake extends Proposition
 
-    println("Hello")
-    testPNot()
-    println("Done")
+  // A non-trivial tautology.
+  // (A and (B or C)) -> ((A and B) or (A and C))
+  type ComplexProposition = IMP[AND[Apples, OR[Bananas, Cake]], OR[AND[Apples, Bananas], AND[Apples, Cake]]]
+
+  def main(args: Array[String]) {
+
   }
 }
