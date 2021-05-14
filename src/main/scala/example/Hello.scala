@@ -15,7 +15,7 @@ object Hello {
   def pAnything2 : Proof[Anything] = throw new Exception()
   def pAnything3 : Proof[Anything] = null
 
-  {
+ {
     // This shows why the pNot class must have a test and how the code could steal the dummy proof.
     try {
       val p: Proof[NOT[Anything]] = iNot(p => throw new Exception("Dummy:" + p))
@@ -33,6 +33,13 @@ object Hello {
   type ComplexProposition = IMP[AND[Apples, OR[Bananas, Cake]], OR[AND[Apples, Bananas], AND[Apples, Cake]]]
 
   def main(args: Array[String]) {
+    val proof : Proof[ComplexProposition] =
+      iImp((h1:Proof[AND[Apples, OR[Bananas, Cake]]]) =>
+        eOr(eAnd2(h1) : Proof[OR[Bananas, Cake]])
+        ((h2:Proof[Bananas]) => iOr1(iAnd(eAnd1(h1))(h2)) : Proof[OR[AND[Apples, Bananas],AND[Apples, Cake]]] )
+        ((h3:Proof[Cake]) => iOr2(iAnd(eAnd1(h1))(h3)) : Proof[OR[AND[Apples, Bananas],AND[Apples, Cake]]] )
+      )
 
+    println(proof)
   }
 }

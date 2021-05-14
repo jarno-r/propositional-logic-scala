@@ -21,15 +21,20 @@ object Core {
 
   final case class pAnd[A <: Proposition, B <: Proposition](a: Proof[A], b: Proof[B]) extends Proof[AND[A, B]]
 
-  // This would be better using polymorphic function types from Scala 3 as pNot[A](p: [C] => Proof[A] => Proof[C])
-  final case class pNot[A <: Proposition](p: Proof[A] => Proof[FALSE]) extends Proof[NOT[A]] {
-    private sealed case class dummyA() extends Proof[A] {
+  private def testHypothesis[A <: Proposition, B <: Proposition](hyp:Proof[A] => Proof[B]) = {
+    final case class dummyA() extends Proof[A] {
       override def toString() = "You stole my dummy!"
     }
+
+    // Test that p actually returns a value.
+    // Warning: If p steals the dummy proof, it breaks the system.
+    require(hyp(dummyA()) != null)
+  }
+
+  // This would be better using polymorphic function types from Scala 3 as pNot[A](p: [C] => Proof[A] => Proof[C])
+  final case class pNot[A <: Proposition](p: Proof[A] => Proof[FALSE]) extends Proof[NOT[A]] {
     {
-      // Test that p actually returns a value.
-      // Warning: If p steals the dummy proof, it breaks the system.
-      require(p(dummyA()) != null)
+      testHypothesis(p)
     }
   }
   final case class pFalse[A <: Proposition](a : Proof[FALSE]) extends Proof[A]

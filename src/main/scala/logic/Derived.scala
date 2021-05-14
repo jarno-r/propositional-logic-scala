@@ -53,7 +53,7 @@ object Derived {
     iNot((p => eNot(pB)(eAnd2(p))))
 
   def eOr[A <: Proposition, B <: Proposition, C <: Proposition]
-  (fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C])(pOr: Proof[OR[A, B]]): Proof[C] =
+  (pOr: Proof[OR[A, B]])(fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C]): Proof[C] =
     pContra((p:Proof[NOT[C]]) => ???)
 
   def pTrue : Proof[TRUE] = iImp(p => p)
