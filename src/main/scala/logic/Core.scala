@@ -9,10 +9,8 @@ object Core {
   // False proposition
   sealed trait FALSE extends Proposition {}
 
-  // A complete set of logical connectives: conjunction and negation.
-  sealed trait AND[A <: Proposition, B <: Proposition] extends Proposition {}
-  sealed trait NOT[A <: Proposition] extends Proposition {}
-
+  // Implication
+  sealed trait IMP[A <: Proposition, B <: Proposition] extends Proposition {}
 
   // Sealed trait of proofs. By being sealed, it prevents false axiomatic proofs from being introduced.
   sealed trait Proof[P <: Proposition] { }

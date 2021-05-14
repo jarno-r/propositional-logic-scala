@@ -5,8 +5,12 @@ object Derived {
 
   import Core._
 
+  type NOT[A <: Proposition] = IMP[A, FALSE]
+
+  type AND[A <: Proposition, B <: Proposition] = IMP[A, NOT[B]]
+
   // Implication defined in terms of the primitive connectives.
-  type IMP[A <: Proposition, B <: Proposition] = NOT[AND[A, NOT[B]]]
+  //type IMP[A <: Proposition, B <: Proposition] = NOT[AND[A, NOT[B]]]
 
   // Disjunction by De Morgan's.
   type OR[A <: Proposition, B <: Proposition] = NOT[AND[NOT[A], NOT[B]]]
