@@ -16,7 +16,7 @@ object Hello {
   def pAnything3 : Proof[Anything] = null
 
  {
-    // This shows why the pNot class must have a test and how the code could steal the dummy proof.
+    // This shows why the ImpEvidence class must have a test and how the code could steal the dummy proof.
     try {
       val p: Proof[NOT[Anything]] = iNot(p => throw new Exception("Dummy:" + p))
     }catch {
@@ -40,6 +40,8 @@ object Hello {
         ((h3:Proof[Cake]) => iOr2(iAnd(eAnd1(h1))(h3)) : Proof[OR[AND[Apples, Bananas],AND[Apples, Cake]]] )
       )
 
+    // The code could be modified so that println would actually print a readable proof.
+    // But this is not the point of this example. The point is that 'proof' by itself is a proof of the proposition.
     println(proof)
   }
 }
