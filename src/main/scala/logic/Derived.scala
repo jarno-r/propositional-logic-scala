@@ -5,8 +5,9 @@ object Derived {
 
   import Core._
 
-  // Implication defined in terms of the primitive connectives.
-  type IMP[A <: Proposition, B <: Proposition] = NOT[AND[A, NOT[B]]]
+  type NOT[A <: Proposition] = IMP[A, FALSE]
+
+  type AND[A <: Proposition, B <: Proposition] = NOT[IMP[A, NOT[B]]]
 
   // Disjunction by De Morgan's.
   type OR[A <: Proposition, B <: Proposition] = NOT[AND[NOT[A], NOT[B]]]
@@ -17,44 +18,38 @@ object Derived {
   // System of Natural Deduction. Rules for manipulating proofs.
   // The actual bodies of these functions are not really relevant, only that there is one.
 
-  // Introduction and elimination rules for conjunction.
-  def iAnd[A <: Proposition, B <: Proposition](a: Proof[A])(b: Proof[B]): Proof[AND[A, B]] = pAnd(a, b)
-  def eAnd1[A <: Proposition, B <: Proposition](and: Proof[AND[A, B]]): Proof[A] = and.asInstanceOf[pAnd[A, B]].a
-  def eAnd2[A <: Proposition, B <: Proposition](and: Proof[AND[A, B]]): Proof[B] = and.asInstanceOf[pAnd[A, B]].b
-
   // Introduction and elimination rules for negation.
-  def iNot[A <: Proposition](p: Proof[A] => Proof[FALSE]): Proof[NOT[A]] = pNot(p)
-  def eNot[A <: Proposition, C <: Proposition](pA: Proof[A])(pNotA: Proof[NOT[A]]): Proof[C] = pFalse(pNotA.asInstanceOf[pNot[A]].p(pA))
+  def iNot[A <: Proposition](p: Proof[A] => Proof[FALSE]): Proof[NOT[A]] = iImp(p)
+  def eNot[A <: Proposition, C <: Proposition](pNotA: Proof[NOT[A]])(pA: Proof[A]): Proof[C] = pFalse(eImp(pNotA)(pA))
 
   // The double negation elimination rule doesn't follow the same pattern of introduction and elimination rules.
   def eNotNot[A <: Proposition](pA: Proof[NOT[NOT[A]]]): Proof[A] = pNotNot(pA)
 
-  // The derived connectives will use the above rules to prove their rules of deduction.
-
   // Proof by contradiction
   def pContra[A <: Proposition](p:Proof[NOT[A]] => Proof[FALSE]) : Proof[A] = eNotNot(iNot(q => p(q)))
 
-  // Implication.
-  def iImp[A <: Proposition, B <: Proposition](fImp: Proof[A] => Proof[B]): Proof[IMP[A, B]] =
-    iNot((p1:Proof[AND[A, NOT[B]]]) => {
-      val pA: Proof[A] = eAnd1(p1)
-      val pNotB: Proof[NOT[B]] = eAnd2(p1)
-      val pB: Proof[B] = fImp(pA)
-      eNot(pB)(pNotB) : Proof[FALSE]
-    })
+  // Introduction and elimination rules for conjunction.
+  def iAnd[A <: Proposition, B <: Proposition](pA: Proof[A])(pB: Proof[B]): Proof[AND[A, B]] = iNot(p => eNot(eImp(p)(pA))(pB))
+  def eAnd1[A <: Proposition, B <: Proposition](pAnd: Proof[AND[A, B]]): Proof[A] = pContra(pn => eNot(pAnd)(iImp(p => eNot(pn)(p))))
+  def eAnd2[A <: Proposition, B <: Proposition](pAnd: Proof[AND[A, B]]): Proof[B] = pContra(p => eNot(pAnd)(iImp(_ => p)))
 
-  def eImp[A <: Proposition, B <: Proposition](pImp: Proof[IMP[A, B]])(pA: Proof[A]): Proof[B] =
-    pContra((p:Proof[NOT[B]]) => eNot(iAnd(pA)(p))(pImp))
+  // The derived connectives will use the above rules to prove their rules of deduction.
 
   def iOr1[A <: Proposition, B <: Proposition](pA: Proof[A]): Proof[OR[A, B]] =
-    iNot((p => eNot(pA)(eAnd1(p))))
+    iNot((p => eNot(eAnd1(p))(pA)))
 
   def iOr2[A <: Proposition, B <: Proposition](pB: Proof[B]): Proof[OR[A, B]] =
-    iNot((p => eNot(pB)(eAnd2(p))))
+    iNot((p => eNot(eAnd2(p))(pB)))
 
   def eOr[A <: Proposition, B <: Proposition, C <: Proposition]
-  (pOr: Proof[OR[A, B]])(fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C]): Proof[C] =
-    pContra((p:Proof[NOT[C]]) => ???)
+  (pOr: Proof[OR[A, B]])(fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C]): Proof[C] = {
+    val pImp: Proof[IMP[NOT[A], NOT[NOT[B]]]] = eNotNot(pOr)
+    pContra((pNotC:Proof[NOT[C]]) => {
+      val pNotA = iNot((pA:Proof[A]) => eNot(pNotC)(fA(pA)))
+      val pB = eNotNot(eImp(pImp)(pNotA))
+      eNot(pNotC)(fB(pB))
+    })
+  }
 
   def pTrue : Proof[TRUE] = iImp(p => p)
 }

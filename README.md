@@ -7,4 +7,7 @@ The problem with applying this principle to a language like Scala is that functi
 2. A function can return null
 3. A function might never terminate.
 
-The third problem is fundamental. For example, proof by contradiction becomes problematic: The existence of a fuction `f: A => FALSE` does not prove that you can actually prove *FALSE* from *A*. One approach is to test `f` with a dummy proof of *A*, but then `f` can steal the dummy proof and break the system.
+The third problem is fundamental. For example, proof by contradiction becomes problematic:
+The existence of a fuction `f: A => FALSE` does not prove that you can actually prove *FALSE* from *A*.
+One approach is to test `f` with a dummy proof of *A*, but since `f` is not guaranteed to be pure, it might steal
+the dummy proof and break the system.
