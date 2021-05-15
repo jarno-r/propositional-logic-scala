@@ -1,6 +1,6 @@
 package logic
 
-// This derived from the code logic. If the core is sound, then all of this is also sound.
+// Things derived from the code logic. If the core is sound, then all of this is also sound.
 object Derived {
 
   import Core._
