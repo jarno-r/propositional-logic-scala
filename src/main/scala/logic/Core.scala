@@ -31,6 +31,8 @@ object Core {
   def eImp[A <: Proposition, B <: Proposition](pImp: Proof[IMP[A, B]])(pA: Proof[A]): Proof[B] = {
     pImp match {
       case e: ImpEvidence[A, B] => e.p(pA)
+      case _: NotNotEvidence[IMP[A, B]] => TestDummy[B]()
+      case _: FalseEvidence[IMP[A, B]] => TestDummy[B]()
       case _: TestDummy[IMP[A, B]] => TestDummy[B]()
       case _ => throw new Exception("This shouldn't happen! " + pImp.getClass)
     }
@@ -39,8 +41,8 @@ object Core {
   // False proposition
   // Limitations of Scala 2 type system forces inclusion of FALSE.
   sealed trait FALSE extends Proposition {}
-  final case class pFalse[A <: Proposition](p : Proof[FALSE]) extends Proof[A]
+  final case class FalseEvidence[A <: Proposition](p : Proof[FALSE]) extends Proof[A]
 
   // Double negation elimination. Equivalent to reductio ad absurdum or the excluded middle.
-  final case class pNotNot[A <: Proposition](p: Proof[IMP[IMP[A, FALSE], FALSE]]) extends Proof[A]
+  final case class NotNotEvidence[A <: Proposition](p: Proof[IMP[IMP[A, FALSE], FALSE]]) extends Proof[A]
 }
