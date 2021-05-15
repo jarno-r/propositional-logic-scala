@@ -5,18 +5,18 @@ object Derived {
 
   import Core._
 
+  // Define other basic connectives using IMP and FALSE.
   type NOT[A <: Proposition] = IMP[A, FALSE]
-
   type AND[A <: Proposition, B <: Proposition] = NOT[IMP[A, NOT[B]]]
 
-  // Disjunction by De Morgan's.
+  // Disjunction by De Morgan's. Not the most natural definition.
   type OR[A <: Proposition, B <: Proposition] = NOT[AND[NOT[A], NOT[B]]]
 
-  // True proposition
+  // A true proposition
   type TRUE = IMP[FALSE, FALSE]
 
   // Deduction rules based on natural deduction. Rules for manipulating proofs.
-  // The actual bodies of these functions are not really relevant, only that there is one with the correct type.
+  // The actual bodies of these functions are not really that important, only that there is one with the correct type.
 
   // Prove anything from FALSE.
   def eFalse[A <: Proposition](p: Proof[FALSE]): Proof[A] = FalseEvidence(p)
@@ -28,7 +28,6 @@ object Derived {
   // The double negation elimination rule doesn't follow the same pattern of introduction and elimination rules.
   def eNotNot[A <: Proposition](pA: Proof[NOT[NOT[A]]]): Proof[A] = NotNotEvidence(pA)
 
-
   // Proof by contradiction
   def pContra[A <: Proposition](p:Proof[NOT[A]] => Proof[FALSE]) : Proof[A] = eNotNot(iNot(q => p(q)))
 
@@ -37,7 +36,7 @@ object Derived {
   def eAnd1[A <: Proposition, B <: Proposition](pAnd: Proof[AND[A, B]]): Proof[A] = pContra(pn => eNot(pAnd)(iImp(p => eNot(pn)(p))))
   def eAnd2[A <: Proposition, B <: Proposition](pAnd: Proof[AND[A, B]]): Proof[B] = pContra(p => eNot(pAnd)(iImp(_ => p)))
 
-
+  // Introduction and elimination rules for disjunction.
   def iOr1[A <: Proposition, B <: Proposition](pA: Proof[A]): Proof[OR[A, B]] =
     iNot((p => eNot(eAnd1(p))(pA)))
 
@@ -54,5 +53,6 @@ object Derived {
     })
   }
 
+  // Prove that TRUE is true.
   def pTrue : Proof[TRUE] = iImp(p => p)
 }
