@@ -41,7 +41,7 @@ object Hello {
       )
 
     // The code could be modified so that println would actually print a readable proof.
-    // But this is not the point of this example. The point is that 'proof' by itself is a proof of the proposition.
+    // But this is not the point of this example. The point is that the above expression by itself is a proof of the proposition.
     println(proof)
   }
 }
