@@ -1,5 +1,7 @@
 # Propositional logic in Scala
-Toy example of Curry-Howard isomorphism in Scala
+Toy example of Curry-Howard correspondence in Scala.
+
+The example shows how propositional logic can be modelled in the Scala type system and how programs can be formal proofs of propositions.
 
 With suitably chosen types, a function `f: A => B` is proof of the proposition *B*, given that proposition *A* is true, i.e. *A* implies *B*.
 The problem with applying this principle to a language like Scala is that function calls do not always evaluate to a value. In Scala, this is for three reasons:
