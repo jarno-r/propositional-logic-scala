@@ -44,7 +44,7 @@ object Core {
     }
   }
 
-  // False proposition
+  // A false proposition.
   // Limitations of Scala 2 type system forces inclusion of a FALSE.
   sealed trait FALSE extends Proposition {}
   final case class FalseEvidence[A <: Proposition](p : Proof[FALSE]) extends Proof[A]
