@@ -40,7 +40,7 @@ object Core {
       case _: TestDummy[IMP[A, B]] => TestDummy[B]()
 
         // Scalac doesn't seem to be able to warn about non-exhaustive match in this case, so throw a decent error.
-      case _ => throw new Exception("This shouldn't happen! " + pImp.getClass)
+      case _ => throw new Exception("This shouldn't happen! Unmatched type: " + pImp.getClass)
     }
   }
 
