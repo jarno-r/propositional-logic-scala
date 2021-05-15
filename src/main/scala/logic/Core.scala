@@ -31,8 +31,8 @@ object Core {
   def eImp[A <: Proposition, B <: Proposition](pImp: Proof[IMP[A, B]])(pA: Proof[A]): Proof[B] = {
     pImp match {
       case e: ImpEvidence[A, B] => e.p(pA)
-      case _: NotNotEvidence[IMP[A, B]] => TestDummy[B]()
-      case _: FalseEvidence[IMP[A, B]] => TestDummy[B]()
+      case _: NotNotEvidence[IMP[A, B]] => TestDummy[B]() // This really shouldn't return a dummy
+      case _: FalseEvidence[IMP[A, B]] => TestDummy[B]() // This really shouldn't return a dummy
       case _: TestDummy[IMP[A, B]] => TestDummy[B]()
 
         // Scalac doesn't seem to be able to warn about non-exhaustive match in this case, so throw a decent error.
