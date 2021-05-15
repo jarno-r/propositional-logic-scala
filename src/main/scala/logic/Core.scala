@@ -16,7 +16,7 @@ object Core {
   // Axioms. These act as evidence for a proposition, without being proven themselves.
 
   private final case class TestDummy[A<: Proposition]() extends Proof[A]{
-    override def toString() = "You stole my dummy!"
+    override def toString = "You stole my dummy!"
   }
 
   private final case class ImpEvidence[A <: Proposition, B <: Proposition](p: Proof[A] => Proof[B]) extends Proof[IMP[A, B]] {
@@ -34,6 +34,8 @@ object Core {
       case _: NotNotEvidence[IMP[A, B]] => TestDummy[B]()
       case _: FalseEvidence[IMP[A, B]] => TestDummy[B]()
       case _: TestDummy[IMP[A, B]] => TestDummy[B]()
+
+        // Scalac doesn't seem to be able to warn about non-exhaustive match in this case, so throw a decent error.
       case _ => throw new Exception("This shouldn't happen! " + pImp.getClass)
     }
   }
