@@ -1,6 +1,6 @@
 package logic
 
-// Derived things. This extends on the Core, but anything but here doesn't really break the core logic.
+// This derived from the code logic. If the core is sound, then all of this is too.
 object Derived {
 
   import Core._
