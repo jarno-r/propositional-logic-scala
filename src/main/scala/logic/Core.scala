@@ -31,7 +31,7 @@ object Core {
   // Implication introduction and elimination rules.
   def iImp[A <: Proposition, B <: Proposition](p: Proof[A] => Proof[B]): Proof[IMP[A,B]] = ImpEvidence(p)
   def eImp[A <: Proposition, B <: Proposition](pImp: Proof[IMP[A, B]])(pA: Proof[A]): Proof[B] = {
-    // In principle, we could just always return a TestDummy(), but expanding on this, we could actually produce
+    // In principle, we could just always return a TestDummy[B](), but expanding on this, we could actually produce
     // a readable proof as a tree-like structure of nested Proofs.
     pImp match {
       case e: ImpEvidence[A, B] => e.p(pA)
