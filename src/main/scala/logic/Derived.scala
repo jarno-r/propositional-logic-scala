@@ -44,7 +44,11 @@ object Derived {
   def eOr[A <: Proposition, B <: Proposition, C <: Proposition]
   (pOr: Proof[OR[A, B]])(fA: Proof[A] => Proof[C])(fB: Proof[B] => Proof[C]): Proof[C] = {
     val pImp: Proof[IMP[NOT[A], NOT[NOT[B]]]] = eNotNot(pOr)
-
+    pContra((pNotC:Proof[NOT[C]]) => {
+      val pNotA = iNot((pA:Proof[A]) => eNot(pNotC)(fA(pA)))
+      val pB = eNotNot(eImp(pImp)(pNotA))
+      eNot(pNotC)(fB(pB))
+    })
   }
 
   def pTrue : Proof[TRUE] = iImp(p => p)

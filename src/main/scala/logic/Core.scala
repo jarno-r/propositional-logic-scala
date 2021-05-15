@@ -1,6 +1,6 @@
 package logic
 
-// The core logic. This is the trusted part of the logic system. Everything else is just derived from this.
+// The core logic. This is the trusted part of the logic system. If this is sound, then the derived logic is sound.
 object Core {
 
   // Supertype of all propositions.
@@ -28,18 +28,19 @@ object Core {
   }
 
   def iImp[A <: Proposition, B <: Proposition](p: Proof[A] => Proof[B]): Proof[IMP[A,B]] = ImpEvidence(p)
-  def eImp[A <: Proposition, B <: Proposition](pImp : Proof[IMP[A,B]])(pA:Proof[A]) : Proof[B] = {
-    if (pImp.isInstanceOf[ImpEvidence[A,B]]) pImp.asInstanceOf[ImpEvidence[A,B]].p(pA)
-    else if (pImp.isInstanceOf[TestDummy[IMP[A,B]]]) TestDummy[B]()
-    else throw new Exception("This shouldn't happen! "+pImp.getClass)
+  def eImp[A <: Proposition, B <: Proposition](pImp: Proof[IMP[A, B]])(pA: Proof[A]): Proof[B] = {
+    pImp match {
+      case e: ImpEvidence[A, B] => e.p(pA)
+      case _: TestDummy[IMP[A, B]] => TestDummy[B]()
+      case _ => throw new Exception("This shouldn't happen! " + pImp.getClass)
+    }
   }
 
-
   // False proposition
-  // Limitation of Scala 2 type system forces inclusion of FALSE.
+  // Limitations of Scala 2 type system forces inclusion of FALSE.
   sealed trait FALSE extends Proposition {}
   final case class pFalse[A <: Proposition](p : Proof[FALSE]) extends Proof[A]
 
-  // Double negation elimination or reductio ad absurdum
+  // Double negation elimination. Equivalent to reductio ad absurdum or the excluded middle.
   final case class pNotNot[A <: Proposition](p: Proof[IMP[IMP[A, FALSE], FALSE]]) extends Proof[A]
 }
